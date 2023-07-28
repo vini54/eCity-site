@@ -10,7 +10,7 @@ export const HeaderLayout = () => {
     <div className="w-screen flex flex-col items-center">
       <header className="w-full bg-palleteBlue10 gap-4 flex items-center flex-col p-4 sm:pr-6 lg:px-12 lg:pr-20">
         <div className="w-full max-w-6xl flex flex-col sm:flex-row items-center gap-4">
-          <img className="w-52" src="/public/Logo-transparent1.png" alt="" />
+          <img className="w-52" src="/Logo-transparent1.png" alt="" />
 
           <div className="flex items-center w-full bg-slate-50 rounded-lg overflow-hidden">
             <input
