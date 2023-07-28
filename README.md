@@ -1,27 +1,23 @@
-# React + TypeScript + Vite
+# E-commerce website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Install
 
-Currently, two official plugins are available:
+1. clone this repo 🔗
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+`https://github.com/vini54/eCity-site.git`
 
-## Expanding the ESLint configuration
+2. install dependencies ⬇️
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+`yarn install`
 
-- Configure the top-level `parserOptions` property like this:
+3. run project 🚀
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+`yarn dev`
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## techs
+
+- vite + react
+- typescript
+- tailwind.css
+- [my-json-server](https://my-json-server.typicode.com/) (_products api_)
+- [awesome api](https://docs.awesomeapi.com.br/api-de-moedas) (_currency quotation_)
