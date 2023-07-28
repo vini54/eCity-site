@@ -1,6 +1,21 @@
+import { useContext, useEffect, useState } from "react";
 import { Product } from "./Product";
+import { GlobalContext } from "../../config/Context";
+import axios from "axios";
 
 export const Orders = () => {
+  const { cartItems } = useContext(GlobalContext);
+  const [resumeValue, setResumeValue] = useState(0);
+
+  useEffect(() => {
+    let totalValue = 0;
+    cartItems.forEach((item) => {
+      totalValue = totalValue + item.price * item.quantity;
+    });
+
+    setResumeValue(totalValue);
+  }, cartItems);
+
   return (
     <div className="w-full flex flex-col lg:flex-row py-4 gap-4 items-center lg:items-start">
       <div className="flex max-w-3xl w-full lg:w-4/6 flex-col gap-2">
@@ -11,22 +26,43 @@ export const Orders = () => {
         </div>
 
         <div className="flex w-full flex-col gap-4">
-          <Product />
-          <Product />
-          <Product />
-          <Product />
-          <Product />
-          <Product />
-          <Product />
+          {cartItems.map((item) => {
+            return (
+              <Product
+                id={item.id}
+                imgSource={item.img}
+                name={item.name}
+                price={item.price}
+                quantity={item.quantity}
+              />
+            );
+          })}
         </div>
       </div>
 
-      <Resume />
+      <Resume total={resumeValue} />
     </div>
   );
 };
 
-const Resume = () => {
+type ResumeProps = {
+  total: number;
+};
+
+const Resume = ({ total }: ResumeProps) => {
+  const [realPrice, setRealPrice] = useState(0);
+
+  useEffect(() => {
+    let dollarCot = 0;
+    axios
+      .get("https://economia.awesomeapi.com.br/json/last/USD-BRL")
+      .then(({ data }) => {
+        dollarCot = Number(data.USDBRL.bid);
+
+        setRealPrice((total + 10) * dollarCot);
+      });
+  }, [total]);
+
   return (
     <div className="w-full sm:w-2/6 min-w-0 sm:min-w-[305px] flex flex-col gap-2 sm:sticky top-3 order-first sm:order-none">
       <div className="w-full flex flex-col border border-slate-400 rounded-sm">
@@ -37,7 +73,7 @@ const Resume = () => {
         <div className="w-full p-2 flex justify-between border-b border-slate-400">
           <p>Subtotal</p>
 
-          <strong>$ 240,00</strong>
+          <strong>$ {total.toFixed(2)}</strong>
         </div>
 
         <div className="w-full p-2 flex justify-between border-b border-slate-400">
@@ -51,10 +87,10 @@ const Resume = () => {
 
           <div className="flex flex-col gap-1 items-end">
             <strong className="text-palleteBlue10 font-bold text-2xl">
-              $ 250,00
+              $ {(total + 10).toFixed(2)}
             </strong>
             <small className="text-lg text-palleteBlue30 font-medium underline opacity-75">
-              R$ 480,00
+              R$ {realPrice.toFixed(2)}
             </small>
           </div>
         </div>

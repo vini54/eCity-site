@@ -1,19 +1,86 @@
 import { Icon } from "@iconify-icon/react";
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState, useContext } from "react";
+import { GlobalContext } from "../../config/Context";
 
-export const Product = () => {
-  const [quantity, setQuantity] = useState(1);
+type ProductProps = {
+  name: string;
+  price: number;
+  id: number;
+  imgSource: string;
+  quantity: number;
+};
+
+type apiData = {
+  USDBRL: {
+    bid: string;
+  };
+};
+
+export const Product = ({
+  name,
+  imgSource,
+  price,
+  id,
+  quantity,
+}: ProductProps) => {
+  const [realPrice, setRealPrice] = useState(0);
+  const { cartItems, setCartItems } = useContext(GlobalContext);
+
+  useEffect(() => {
+    let dollarCot = 0;
+    axios
+      .get<apiData>("https://economia.awesomeapi.com.br/json/last/USD-BRL")
+      .then(({ data }) => {
+        dollarCot = Number(data.USDBRL.bid);
+
+        setRealPrice(price * quantity * dollarCot);
+      });
+  }, [quantity]);
+
+  const handleChangeItem = (action: "add" | "sub" | "remove") => {
+    if (action === "add") {
+      setCartItems(
+        cartItems.map((item) => {
+          if (item.id === id) {
+            return {
+              ...item,
+              quantity: item.quantity + 1,
+            };
+          } else {
+            return item;
+          }
+        })
+      );
+    }
+
+    if (action === "sub") {
+      setCartItems(
+        cartItems.map((item) => {
+          if (item.id === id) {
+            return {
+              ...item,
+              quantity: item.quantity > 1 ? item.quantity - 1 : 1,
+            };
+          } else {
+            return item;
+          }
+        })
+      );
+    }
+
+    if (action === "remove") {
+      setCartItems(cartItems.filter((item) => (item.id === id ? null : item)));
+    }
+  };
 
   return (
     <div className="flex flex-wrap sm:flex-nowrap gap-4 sm:gap-0 items-center w-full p-3 border border-slate-500 rounded">
       <div className="flex w-full sm:w-1/2 gap-2 items-center">
-        <img
-          className="w-28 sm:w-20 rounded"
-          src="https://cdn.discordapp.com/attachments/966433777461129337/1134166397254119554/Baasplea-Crian-as-Esporte-Sapatos-Malha-Respir-vel-Sapatilhas-Casuais-Para-Meninos-Menina-T-nis-De.png"
-        />
+        <img className="w-28 sm:w-20 rounded" src={imgSource} />
 
         <p className="w-full sm:w-4/6 text-base font-medium text-slate-950">
-          Sapatos Malha Respirável Sapatilhas Casuais
+          {name}
         </p>
       </div>
 
@@ -21,28 +88,33 @@ export const Product = () => {
         <div className="w-full max-w-[120px] flex items-center justify-between rounded-sm border border-slate-400">
           <button
             className="text-slate-600 flex"
-            onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
+            onClick={() => handleChangeItem("sub")}
           >
             <Icon icon="ph:minus-fill" width="32" />
           </button>
           <p className="text-lg font-medium text-slate-800">{quantity}</p>
           <button
-            onClick={() => setQuantity(quantity + 1)}
+            onClick={() => handleChangeItem("add")}
             className="text-slate-600 flex"
           >
             <Icon icon="ph:plus-fill" width="32" />
           </button>
         </div>
 
-        <button className="text-center text-slate-500 text-sm">Remover</button>
+        <button
+          onClick={() => handleChangeItem("remove")}
+          className="text-center text-slate-500 text-sm"
+        >
+          Remover
+        </button>
       </div>
 
       <div className="ml-auto sm:ml-0 sm:w-1/4 flex flex-col gap-1">
         <small className="text-sm text-slate-500 text-end font-medium">
-          R$ 20,00
+          R$ {realPrice.toFixed(2)}
         </small>
         <strong className="text-xl font-bold text-slate-900 text-end">
-          $ 68,00
+          $ {(price * quantity).toFixed(2)}
         </strong>
       </div>
     </div>

@@ -1,7 +1,11 @@
 import { Outlet, NavLink } from "react-router-dom";
 import { Icon } from "@iconify-icon/react";
+import { useContext } from "react";
+import { GlobalContext } from "../config/Context";
 
 export const HeaderLayout = () => {
+  const { cartItems } = useContext(GlobalContext);
+
   return (
     <div className="w-screen flex flex-col items-center">
       <header className="w-full bg-palleteBlue10 gap-4 flex items-center flex-col p-4 sm:pr-6 lg:px-12 lg:pr-20">
@@ -78,7 +82,7 @@ export const HeaderLayout = () => {
               <Icon icon="humbleicons:cart" width="36" />
 
               <span className="text-slate-50 text-xs bg-palleteOrange10 p-1 px-2 rounded-full absolute -top-1 flex -right-1">
-                0
+                {cartItems.length}
               </span>
             </NavLink>
           </div>
