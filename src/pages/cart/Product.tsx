@@ -9,6 +9,7 @@ type ProductProps = {
   id: number;
   imgSource: string;
   quantity: number;
+  giftType?: boolean;
 };
 
 type apiData = {
@@ -23,6 +24,7 @@ export const Product = ({
   price,
   id,
   quantity,
+  giftType,
 }: ProductProps) => {
   const [realPrice, setRealPrice] = useState(0);
   const { cartItems, setCartItems } = useContext(GlobalContext);
@@ -70,12 +72,32 @@ export const Product = ({
     }
 
     if (action === "remove") {
-      setCartItems(cartItems.filter((item) => (item.id === id ? null : item)));
+      if (giftType) {
+        setCartItems(
+          cartItems.map((item) => {
+            if (item.id === id) {
+              return { ...item, quantity: 0 };
+            } else {
+              return item;
+            }
+          })
+        );
+      } else {
+        setCartItems(
+          cartItems.filter((item) => (item.id === id ? null : item))
+        );
+      }
     }
   };
 
   return (
-    <div className="flex flex-wrap sm:flex-nowrap gap-4 sm:gap-0 items-center w-full p-3 border border-slate-500 rounded">
+    <div
+      className={`flex flex-wrap sm:flex-nowrap gap-4 sm:gap-0 items-center w-full p-3   rounded ${
+        giftType
+          ? "border-palleteOrange10 border-2 bg-palleteOrange10 bg-opacity-10"
+          : "border-slate-500 border"
+      }`}
+    >
       <div className="flex w-full sm:w-1/2 gap-2 items-center">
         <img className="w-28 sm:w-20 rounded" src={imgSource} />
 
@@ -85,25 +107,37 @@ export const Product = ({
       </div>
 
       <div className="flex flex-col items-center w-[120px] sm:w-1/4 mr-auto sm:mr-0">
-        <div className="w-full max-w-[120px] flex items-center justify-between rounded-sm border border-slate-400">
-          <button
-            className="text-slate-600 flex"
-            onClick={() => handleChangeItem("sub")}
-          >
-            <Icon icon="ph:minus-fill" width="32" />
-          </button>
-          <p className="text-lg font-medium text-slate-800">{quantity}</p>
-          <button
-            onClick={() => handleChangeItem("add")}
-            className="text-slate-600 flex"
-          >
-            <Icon icon="ph:plus-fill" width="32" />
-          </button>
+        <div
+          className={`w-full max-w-[120px] flex items-center justify-between rounded-sm ${
+            !giftType && "border"
+          } border-slate-400`}
+        >
+          {!giftType && (
+            <>
+              <button
+                className="text-slate-600 flex"
+                onClick={() => handleChangeItem("sub")}
+              >
+                <Icon icon="ph:minus-fill" width="32" />
+              </button>
+              <p className="text-lg font-medium text-slate-800">{quantity}</p>
+              <button
+                onClick={() => handleChangeItem("add")}
+                className="text-slate-600 flex"
+              >
+                <Icon icon="ph:plus-fill" width="32" />
+              </button>
+            </>
+          )}
         </div>
 
         <button
           onClick={() => handleChangeItem("remove")}
-          className="text-center text-slate-500 text-sm"
+          className={`text-center text-sm ${
+            giftType
+              ? "bg-red-600 text-slate-50 p-2 px-3 rounded"
+              : "text-slate-500"
+          }`}
         >
           Remover
         </button>

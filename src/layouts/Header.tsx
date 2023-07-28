@@ -82,7 +82,7 @@ export const HeaderLayout = () => {
               <Icon icon="humbleicons:cart" width="36" />
 
               <span className="text-slate-50 text-xs bg-palleteOrange10 p-1 px-2 rounded-full absolute -top-1 flex -right-1">
-                {cartItems.length}
+                {cartItems.filter((item) => item.quantity > 0).length}
               </span>
             </NavLink>
           </div>

@@ -27,15 +27,21 @@ export const Orders = () => {
 
         <div className="flex w-full flex-col gap-4">
           {cartItems.map((item) => {
-            return (
-              <Product
-                id={item.id}
-                imgSource={item.img}
-                name={item.name}
-                price={item.price}
-                quantity={item.quantity}
-              />
-            );
+            if (item.isGift && item.quantity == 0) {
+              return null;
+            } else {
+              return (
+                <Product
+                  id={item.id}
+                  key={item.id}
+                  imgSource={item.img}
+                  name={item.name}
+                  price={item.price}
+                  quantity={item.quantity}
+                  giftType={item.isGift}
+                />
+              );
+            }
           })}
         </div>
       </div>
