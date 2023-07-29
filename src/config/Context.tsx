@@ -27,12 +27,17 @@ export type CartType = {
 type GlobalContextProps = {
   cartItems: CartType[];
   setCartItems: React.Dispatch<React.SetStateAction<CartType[]>>;
+  giftItems: CartType[];
+  setGiftItems: React.Dispatch<React.SetStateAction<CartType[]>>;
+  giftAlert: boolean;
 };
 
 export const GlobalContext = createContext({} as GlobalContextProps);
 
 export const ContextProvider = ({ children }: ProviderProps) => {
   const [cartItems, setCartItems] = useState<CartType[]>([]);
+  const [giftItems, setGiftItems] = useState<CartType[]>([]);
+  const [giftAlert, setGiftAlert] = useState(false);
   const [initRender, setInitRender] = useState(true);
 
   useEffect(() => {
@@ -59,10 +64,10 @@ export const ContextProvider = ({ children }: ProviderProps) => {
       data.forEach((dataItem) => {
         if (
           dataItem.points <= totalPts &&
-          !cartItems.find((item) => item.id === dataItem.product.id)
+          !giftItems.find((item) => item.id === dataItem.product.id)
         ) {
-          setCartItems([
-            ...cartItems,
+          setGiftItems([
+            ...giftItems,
             {
               id: dataItem.product.id,
               img: dataItem.product.img,
@@ -70,25 +75,39 @@ export const ContextProvider = ({ children }: ProviderProps) => {
               points: 0,
               price: 0,
               quantity: 1,
-              isGift: true,
             },
           ]);
+
+          setGiftAlert(true);
         }
 
         if (
           totalPts < dataItem.points &&
-          cartItems.find((item) => item.id === dataItem.product.id)
+          giftItems.find((item) => item.id === dataItem.product.id)
         ) {
-          setCartItems(
-            cartItems.filter((item) => item.id !== dataItem.product.id)
+          setGiftItems(
+            giftItems.filter((item) => item.id !== dataItem.product.id)
           );
         }
       });
     });
   }, [cartItems]);
 
+  useEffect(() => {
+    let timer = 0;
+    if (giftAlert) {
+      timer = setTimeout(() => {
+        setGiftAlert(false);
+      }, 2500);
+    }
+
+    return () => clearTimeout(timer);
+  }, [giftAlert]);
+
   return (
-    <GlobalContext.Provider value={{ cartItems, setCartItems }}>
+    <GlobalContext.Provider
+      value={{ cartItems, setCartItems, giftItems, setGiftItems, giftAlert }}
+    >
       {children}
     </GlobalContext.Provider>
   );

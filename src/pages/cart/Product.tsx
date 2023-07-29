@@ -9,7 +9,7 @@ type ProductProps = {
   id: number;
   imgSource: string;
   quantity: number;
-  giftType?: boolean;
+  isGift?: boolean;
 };
 
 type apiData = {
@@ -24,10 +24,11 @@ export const Product = ({
   price,
   id,
   quantity,
-  giftType,
+  isGift,
 }: ProductProps) => {
   const [realPrice, setRealPrice] = useState(0);
-  const { cartItems, setCartItems } = useContext(GlobalContext);
+  const { cartItems, setCartItems, setGiftItems, giftItems } =
+    useContext(GlobalContext);
 
   useEffect(() => {
     let dollarCot = 0;
@@ -72,9 +73,9 @@ export const Product = ({
     }
 
     if (action === "remove") {
-      if (giftType) {
-        setCartItems(
-          cartItems.map((item) => {
+      if (isGift) {
+        setGiftItems(
+          giftItems.map((item) => {
             if (item.id === id) {
               return { ...item, quantity: 0 };
             } else {
@@ -93,15 +94,18 @@ export const Product = ({
   return (
     <div
       className={`flex flex-wrap sm:flex-nowrap gap-4 sm:gap-0 items-center w-full p-3   rounded ${
-        giftType
+        isGift
           ? "border-palleteOrange10 border-2 bg-palleteOrange10 bg-opacity-10"
           : "border-slate-500 border"
       }`}
     >
       <div className="flex w-full sm:w-1/2 gap-2 items-center">
-        <img className="w-28 sm:w-20 rounded" src={imgSource} />
+        <img
+          className="w-28 aspect-square object-cover object-center sm:w-20 rounded"
+          src={imgSource}
+        />
 
-        <p className="w-full sm:w-4/6 text-base font-medium text-slate-950">
+        <p className="w-full sm:w-4/6 text-sm h-14 overflow-auto font-medium text-slate-950">
           {name}
         </p>
       </div>
@@ -109,10 +113,10 @@ export const Product = ({
       <div className="flex flex-col items-center w-[120px] sm:w-1/4 mr-auto sm:mr-0">
         <div
           className={`w-full max-w-[120px] flex items-center justify-between rounded-sm ${
-            !giftType && "border"
+            !isGift && "border"
           } border-slate-400`}
         >
-          {!giftType && (
+          {!isGift && (
             <>
               <button
                 className="text-slate-600 flex"
@@ -134,7 +138,7 @@ export const Product = ({
         <button
           onClick={() => handleChangeItem("remove")}
           className={`text-center text-sm ${
-            giftType
+            isGift
               ? "bg-red-600 text-slate-50 p-2 px-3 rounded"
               : "text-slate-500"
           }`}

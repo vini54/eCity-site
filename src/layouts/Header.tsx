@@ -1,13 +1,30 @@
 import { Outlet, NavLink } from "react-router-dom";
 import { Icon } from "@iconify-icon/react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { GlobalContext } from "../config/Context";
+import { Alert, Snackbar } from "@mui/material";
 
 export const HeaderLayout = () => {
-  const { cartItems } = useContext(GlobalContext);
+  const { cartItems, giftItems, giftAlert } = useContext(GlobalContext);
+  const [showScrollBtn, setShowScrollBtn] = useState(false);
+
+  window.document.addEventListener("scroll", () => {
+    if (window.scrollY > 160) {
+      setShowScrollBtn(true);
+    } else {
+      setShowScrollBtn(false);
+    }
+  });
+
+  const handleScrollTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   return (
-    <div className="w-screen flex flex-col items-center">
+    <div className="w-screen flex flex-col items-center relative">
       <header className="w-full bg-palleteBlue10 gap-4 flex items-center flex-col p-4 sm:pr-6 lg:px-12 lg:pr-20">
         <div className="w-full max-w-6xl flex flex-col sm:flex-row items-center gap-4">
           <img className="w-52" src="/Logo-transparent1.png" alt="" />
@@ -82,7 +99,8 @@ export const HeaderLayout = () => {
               <Icon icon="humbleicons:cart" width="36" />
 
               <span className="text-slate-50 text-xs bg-palleteOrange10 p-1 px-2 rounded-full absolute -top-1 flex -right-1">
-                {cartItems.filter((item) => item.quantity > 0).length}
+                {cartItems.length +
+                  giftItems.filter((item) => item.quantity > 0).length}
               </span>
             </NavLink>
           </div>
@@ -92,6 +110,22 @@ export const HeaderLayout = () => {
       <main className="w-full flex justify-center">
         <Outlet />
       </main>
+
+      <Snackbar open={giftAlert} autoHideDuration={2500}>
+        <Alert severity="info" variant="filled">
+          Você recebeu um brinde!
+        </Alert>
+      </Snackbar>
+
+      <button
+        className={`fixed bottom-4 right-6 text-slate-50 bg-palleteBlue20 transition flex p-2 rounded-full outline-none ${
+          showScrollBtn ? "opacity-75 hover:opacity-100" : "opacity-0"
+        }`}
+        disabled={!showScrollBtn}
+        onClick={handleScrollTop}
+      >
+        <Icon icon="iconamoon:arrow-up-1-fill" width={32} />
+      </button>
     </div>
   );
 };

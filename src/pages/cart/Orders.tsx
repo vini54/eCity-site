@@ -2,9 +2,10 @@ import { useContext, useEffect, useState } from "react";
 import { Product } from "./Product";
 import { GlobalContext } from "../../config/Context";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export const Orders = () => {
-  const { cartItems } = useContext(GlobalContext);
+  const { cartItems, giftItems } = useContext(GlobalContext);
   const [resumeValue, setResumeValue] = useState(0);
 
   useEffect(() => {
@@ -27,9 +28,20 @@ export const Orders = () => {
 
         <div className="flex w-full flex-col gap-4">
           {cartItems.map((item) => {
-            if (item.isGift && item.quantity == 0) {
-              return null;
-            } else {
+            return (
+              <Product
+                id={item.id}
+                key={item.id}
+                imgSource={item.img}
+                name={item.name}
+                price={item.price}
+                quantity={item.quantity}
+              />
+            );
+          })}
+
+          {giftItems.map((item) => {
+            if (item.quantity > 0) {
               return (
                 <Product
                   id={item.id}
@@ -38,11 +50,12 @@ export const Orders = () => {
                   name={item.name}
                   price={item.price}
                   quantity={item.quantity}
-                  giftType={item.isGift}
+                  isGift
                 />
               );
             }
           })}
+          {}
         </div>
       </div>
 
@@ -70,7 +83,7 @@ const Resume = ({ total }: ResumeProps) => {
   }, [total]);
 
   return (
-    <div className="w-full sm:w-2/6 min-w-0 sm:min-w-[305px] flex flex-col gap-2 sm:sticky top-3 order-first sm:order-none">
+    <div className="w-full lg:w-2/6 max-w-md min-w-0 sm:min-w-[305px] flex flex-col gap-2 sm:sticky top-3 order-first lg:order-none">
       <div className="w-full flex flex-col border border-slate-400 rounded-sm">
         <h3 className="w-full py-2 text-center self-center text-lg font-medium border-b border-slate-400">
           Resumo do pedido
@@ -103,9 +116,12 @@ const Resume = ({ total }: ResumeProps) => {
       </div>
 
       <div className="w-full flex justify-between">
-        <button className="p-2 px-4 bg-slate-500 hover:bg-slate-700 transition rounded text-sm text-slate-50">
+        <Link
+          to="/"
+          className="p-2 px-4 flex items-center bg-slate-500 hover:bg-slate-700 transition rounded text-sm text-slate-50"
+        >
           Adicionar produtos
-        </button>
+        </Link>
         <button className="p-2 px-4 bg-green-600 hover:bg-green-700 transition rounded text-lg font-medium text-slate-50">
           Fechar Pedido
         </button>

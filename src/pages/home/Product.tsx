@@ -1,5 +1,5 @@
 import { Icon } from "@iconify-icon/react";
-import { Skeleton } from "@mui/material";
+import { Skeleton, Tooltip } from "@mui/material";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../../config/Context";
@@ -92,10 +92,13 @@ export const Product = ({
       {loading ? (
         <Skeleton variant="rectangular" width="100%" height={175} />
       ) : (
-        <img src={imgSource} />
+        <img
+          className="w-full aspect-square object-cover object-center"
+          src={imgSource}
+        />
       )}
 
-      <p className="h-12 mt-1 overflow-hidden text-sm font-semibold flex flex-col">
+      <p className="h-10 mt-1 overflow-auto text-sm font-semibold flex flex-col">
         {loading ? (
           <>
             <Skeleton
@@ -126,19 +129,21 @@ export const Product = ({
             <h3 className="text-xl font-semibold">$ {price?.toFixed(2)}</h3>
           )}
 
-          <button
-            onClick={addCartAnim ? () => null : handleAddtoCart}
-            className={`text-xs p-1 px-2 rounded transition ${
-              addCartAnim ? "bg-green-600" : "bg-palleteOrange10"
-            }  text-slate-50 flex items-center gap-1`}
-          >
-            {addCartAnim ? (
-              <Icon icon="mingcute:check-fill" width="16" />
-            ) : (
-              <Icon icon="humbleicons:cart" width="16" />
-            )}
-            Adicionar
-          </button>
+          <Tooltip title="Adicionado ao carrinho!" open={addCartAnim}>
+            <button
+              onClick={addCartAnim ? () => null : handleAddtoCart}
+              className={`text-xs p-1 px-2 rounded transition ${
+                addCartAnim ? "bg-green-600" : "bg-palleteOrange10"
+              }  text-slate-50 flex items-center gap-1`}
+            >
+              {addCartAnim ? (
+                <Icon icon="mingcute:check-fill" width="16" />
+              ) : (
+                <Icon icon="humbleicons:cart" width="16" />
+              )}
+              Adicionar
+            </button>
+          </Tooltip>
         </div>
       </div>
     </div>
