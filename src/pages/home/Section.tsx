@@ -1,12 +1,14 @@
 import react, { useRef } from "react";
 import { Icon } from "@iconify-icon/react";
+import { Product } from "./Product";
 
 type SectionProps = {
   title?: string;
   children: react.ReactNode;
+  isLoading: boolean;
 };
 
-export const Section = ({ title, children }: SectionProps) => {
+export const Section = ({ title, children, isLoading }: SectionProps) => {
   const listRef = useRef<HTMLDivElement>(null);
 
   const handlemoveLis = (direction: "left" | "right") => {
@@ -59,7 +61,15 @@ export const Section = ({ title, children }: SectionProps) => {
         ref={listRef}
         className="flex gap-2 w-full overflow-x-auto p-2 snap-x snap-mandatory scroll-px-1"
       >
-        {children}
+        {isLoading ? (
+          <>
+            <Product loading />
+            <Product loading />
+            <Product loading />
+          </>
+        ) : (
+          children
+        )}
       </div>
     </section>
   );

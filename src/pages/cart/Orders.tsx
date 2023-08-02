@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Product } from "./Product";
 import { GlobalContext } from "../../config/Context";
-import axios from "axios";
 import { Link } from "react-router-dom";
 
 export const Orders = () => {
@@ -69,18 +68,7 @@ type ResumeProps = {
 };
 
 const Resume = ({ total }: ResumeProps) => {
-  const [realPrice, setRealPrice] = useState(0);
-
-  useEffect(() => {
-    let dollarCot = 0;
-    axios
-      .get("https://economia.awesomeapi.com.br/json/last/USD-BRL")
-      .then(({ data }) => {
-        dollarCot = Number(data.USDBRL.bid);
-
-        setRealPrice((total + 10) * dollarCot);
-      });
-  }, [total]);
+  const { usdBrlCott } = useContext(GlobalContext);
 
   return (
     <div className="w-full lg:w-2/6 max-w-md min-w-0 sm:min-w-[305px] flex flex-col gap-2 sm:sticky top-3 order-first lg:order-none">
@@ -109,7 +97,7 @@ const Resume = ({ total }: ResumeProps) => {
               $ {(total + 10).toFixed(2)}
             </strong>
             <small className="text-lg text-palleteBlue30 font-medium underline opacity-75">
-              R$ {realPrice.toFixed(2)}
+              {`R$ ${(total * usdBrlCott).toFixed(2).replace(".", ",")}`}
             </small>
           </div>
         </div>

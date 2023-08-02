@@ -1,6 +1,5 @@
 import { Icon } from "@iconify-icon/react";
-import axios from "axios";
-import { useEffect, useState, useContext } from "react";
+import { useContext } from "react";
 import { GlobalContext } from "../../config/Context";
 
 type ProductProps = {
@@ -12,12 +11,6 @@ type ProductProps = {
   isGift?: boolean;
 };
 
-type apiData = {
-  USDBRL: {
-    bid: string;
-  };
-};
-
 export const Product = ({
   name,
   imgSource,
@@ -26,20 +19,8 @@ export const Product = ({
   quantity,
   isGift,
 }: ProductProps) => {
-  const [realPrice, setRealPrice] = useState(0);
-  const { cartItems, setCartItems, setGiftItems, giftItems } =
+  const { cartItems, setCartItems, setGiftItems, giftItems, usdBrlCott } =
     useContext(GlobalContext);
-
-  useEffect(() => {
-    let dollarCot = 0;
-    axios
-      .get<apiData>("https://economia.awesomeapi.com.br/json/last/USD-BRL")
-      .then(({ data }) => {
-        dollarCot = Number(data.USDBRL.bid);
-
-        setRealPrice(price * quantity * dollarCot);
-      });
-  }, [quantity]);
 
   const handleChangeItem = (action: "add" | "sub" | "remove") => {
     if (action === "add") {
@@ -149,7 +130,9 @@ export const Product = ({
 
       <div className="ml-auto sm:ml-0 sm:w-1/4 flex flex-col gap-1">
         <small className="text-sm text-slate-500 text-end font-medium">
-          R$ {realPrice.toFixed(2)}
+          {/* R$ {realPrice.toFixed(2)} */}
+
+          {`R$ ${(price * usdBrlCott).toFixed(2).replace(".", ",")}`}
         </small>
         <strong className="text-xl font-bold text-slate-900 text-end">
           $ {(price * quantity).toFixed(2)}

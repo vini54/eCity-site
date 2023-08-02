@@ -77,162 +77,112 @@ export const Homepage = () => {
   }, []);
   return (
     <div className="flex flex-col gap-8 p-4 sm:p-6 lg:pr-16 lg:px-12 w-full max-w-7xl">
-      <Section title="Promoções do dia">
-        {isLoading ? (
-          <>
-            <Product loading />
-            <Product loading />
-            <Product loading />
-          </>
-        ) : (
-          <>
-            {productList.map((item) => {
-              if (!item.category) {
-                return (
-                  <Product
-                    key={item.id}
-                    name={item.name}
-                    price={item.price}
-                    imgSource={item.img}
-                    id={item.id}
-                    points={item.points}
-                  />
-                );
-              }
-            })}
-          </>
-        )}
+      <Section title="Promoções do dia" isLoading={isLoading}>
+        {productList.map((item) => {
+          if (!item.category) {
+            return (
+              <Product
+                key={item.id}
+                name={item.name}
+                price={item.price}
+                imgSource={item.img}
+                id={item.id}
+                points={item.points}
+              />
+            );
+          }
+        })}
       </Section>
 
-      <Section title="Tecnologia">
-        {isLoading ? (
-          <>
-            <Product loading />
-            <Product loading />
-            <Product loading />
-          </>
-        ) : (
-          <>
-            {productList.map((item) => {
-              if (
-                [
-                  "smartphones",
-                  "laptops",
-                  "mens-watches",
-                  "womens-watches",
-                  "automotive",
-                ].includes(item.category!, 0)
-              ) {
-                return (
-                  <Product
-                    key={item.id}
-                    name={item.name}
-                    price={item.price}
-                    imgSource={item.img}
-                    id={item.id}
-                    points={item.points}
-                  />
-                );
-              }
-            })}
-          </>
-        )}
+      <Section title="Tecnologia" isLoading={isLoading}>
+        {productList.map((item) => {
+          if (
+            [
+              "smartphones",
+              "laptops",
+              "mens-watches",
+              "womens-watches",
+              "automotive",
+            ].includes(item.category!, 0)
+          ) {
+            return (
+              <Product
+                key={item.id}
+                name={item.name}
+                price={item.price}
+                imgSource={item.img}
+                id={item.id}
+                points={item.points}
+              />
+            );
+          }
+        })}
       </Section>
 
-      <Section title="Beleza e cuidados">
-        {isLoading ? (
-          <>
-            <Product loading />
-            <Product loading />
-            <Product loading />
-          </>
-        ) : (
-          <>
-            {productList.map((item) => {
-              if (["fragrances", "skincare"].includes(item.category!, 0)) {
-                return (
-                  <Product
-                    key={item.id}
-                    name={item.name}
-                    price={item.price}
-                    imgSource={item.img}
-                    id={item.id}
-                    points={item.points}
-                  />
-                );
-              }
-            })}
-          </>
-        )}
+      <Section title="Beleza e cuidados" isLoading={isLoading}>
+        {productList.map((item) => {
+          if (["fragrances", "skincare"].includes(item.category!, 0)) {
+            return (
+              <Product
+                key={item.id}
+                name={item.name}
+                price={item.price}
+                imgSource={item.img}
+                id={item.id}
+                points={item.points}
+              />
+            );
+          }
+        })}
       </Section>
 
-      <Section title="Moda">
-        {isLoading ? (
-          <>
-            <Product loading />
-            <Product loading />
-            <Product loading />
-          </>
-        ) : (
-          <>
-            {productList.map((item) => {
-              if (
-                [
-                  "tops",
-                  "womens-dresses",
-                  "womens-shoes",
-                  "mens-shirts",
-                  "mens-shoes",
-                  "womens-bags",
-                  "womens-jewellery",
-                ].includes(item.category!, 0)
-              ) {
-                return (
-                  <Product
-                    key={item.id}
-                    name={item.name}
-                    price={item.price}
-                    imgSource={item.img}
-                    id={item.id}
-                    points={item.points}
-                  />
-                );
-              }
-            })}
-          </>
-        )}
+      <Section title="Moda" isLoading={isLoading}>
+        {productList.map((item) => {
+          if (
+            [
+              "tops",
+              "womens-dresses",
+              "womens-shoes",
+              "mens-shirts",
+              "mens-shoes",
+              "womens-bags",
+              "womens-jewellery",
+            ].includes(item.category!, 0)
+          ) {
+            return (
+              <Product
+                key={item.id}
+                name={item.name}
+                price={item.price}
+                imgSource={item.img}
+                id={item.id}
+                points={item.points}
+              />
+            );
+          }
+        })}
       </Section>
 
-      <Section title="Casa e decorações">
-        {isLoading ? (
-          <>
-            <Product loading />
-            <Product loading />
-            <Product loading />
-          </>
-        ) : (
-          <>
-            {productList.map((item) => {
-              if (
-                ["home-decoration", "furniture", "lighting"].includes(
-                  item.category!,
-                  0
-                )
-              ) {
-                return (
-                  <Product
-                    key={item.id}
-                    name={item.name}
-                    price={item.price}
-                    imgSource={item.img}
-                    id={item.id}
-                    points={item.points}
-                  />
-                );
-              }
-            })}
-          </>
-        )}
+      <Section title="Casa e decorações" isLoading={isLoading}>
+        {productList.map((item) => {
+          if (
+            ["home-decoration", "furniture", "lighting"].includes(
+              item.category!,
+              0
+            )
+          ) {
+            return (
+              <Product
+                key={item.id}
+                name={item.name}
+                price={item.price}
+                imgSource={item.img}
+                id={item.id}
+                points={item.points}
+              />
+            );
+          }
+        })}
       </Section>
     </div>
   );

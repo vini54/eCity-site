@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import { MainApi } from "../config/api";
+import axios from "axios";
 
 type ProviderProps = {
   children: React.ReactNode;
@@ -30,6 +31,7 @@ type GlobalContextProps = {
   giftItems: CartType[];
   setGiftItems: React.Dispatch<React.SetStateAction<CartType[]>>;
   giftAlert: boolean;
+  usdBrlCott: number;
 };
 
 export const GlobalContext = createContext({} as GlobalContextProps);
@@ -39,6 +41,7 @@ export const ContextProvider = ({ children }: ProviderProps) => {
   const [giftItems, setGiftItems] = useState<CartType[]>([]);
   const [giftAlert, setGiftAlert] = useState(false);
   const [initRender, setInitRender] = useState(true);
+  const [usdBrlCott, setUsdBrlCot] = useState(0);
 
   useEffect(() => {
     const storageCartItems = localStorage.getItem("@app/cartItems");
@@ -48,6 +51,18 @@ export const ContextProvider = ({ children }: ProviderProps) => {
     }
 
     setInitRender(false);
+
+    type apiData = {
+      USDBRL: {
+        bid: string;
+      };
+    };
+
+    axios
+      .get<apiData>("https://economia.awesomeapi.com.br/json/last/USD-BRL")
+      .then(({ data }) => {
+        setUsdBrlCot(Number(data.USDBRL.bid));
+      });
   }, []);
 
   useEffect(() => {
@@ -106,7 +121,14 @@ export const ContextProvider = ({ children }: ProviderProps) => {
 
   return (
     <GlobalContext.Provider
-      value={{ cartItems, setCartItems, giftItems, setGiftItems, giftAlert }}
+      value={{
+        cartItems,
+        setCartItems,
+        giftItems,
+        setGiftItems,
+        giftAlert,
+        usdBrlCott,
+      }}
     >
       {children}
     </GlobalContext.Provider>

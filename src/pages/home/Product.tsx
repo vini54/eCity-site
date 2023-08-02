@@ -1,6 +1,5 @@
 import { Icon } from "@iconify-icon/react";
 import { Skeleton, Tooltip } from "@mui/material";
-import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../../config/Context";
 
@@ -13,12 +12,6 @@ type ProductProps = {
   loading?: boolean;
 };
 
-type apiData = {
-  USDBRL: {
-    bid: string;
-  };
-};
-
 export const Product = ({
   loading,
   imgSource,
@@ -27,22 +20,8 @@ export const Product = ({
   id,
   points,
 }: ProductProps) => {
-  const [realPrice, setRealPrice] = useState<number | undefined>();
   const [addCartAnim, setAddCartAnim] = useState(false);
-  const { cartItems, setCartItems } = useContext(GlobalContext);
-
-  useEffect(() => {
-    let dollarCot = 0;
-    if (!loading) {
-      axios
-        .get<apiData>("https://economia.awesomeapi.com.br/json/last/USD-BRL")
-        .then(({ data }) => {
-          dollarCot = Number(data.USDBRL.bid);
-
-          setRealPrice(price! * dollarCot);
-        });
-    }
-  }, []);
+  const { cartItems, setCartItems, usdBrlCott } = useContext(GlobalContext);
 
   useEffect(() => {
     let timer: number;
@@ -115,11 +94,8 @@ export const Product = ({
 
       <div className="flex flex-col">
         <p className="text-sm text-slate-500">
-          {realPrice === undefined ? (
-            <Skeleton variant="text" width={64} sx={{ fontSize: "0.75rem" }} />
-          ) : (
-            `R$ ${realPrice.toFixed(2)}`
-          )}
+          {!loading &&
+            `R$ ${(price! * usdBrlCott).toFixed(2).replace(".", ",")}`}
         </p>
 
         <div className="flex items-center justify-between">
